@@ -1,7 +1,9 @@
 package com.ozantok.depremtakipapp.data.repository
 
 
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import com.ozantok.depremtakipapp.data.model.EarthquakeResponse
 import com.ozantok.depremtakipapp.data.remote.EarthquakeApiService
 import kotlinx.coroutines.Dispatchers
@@ -9,6 +11,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
 import org.jsoup.Jsoup
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -19,31 +23,19 @@ class EarthquakeRepository @Inject constructor(
     private val TAG = "EarthquakeRepository"
 
     // AFAD API'sinden deprem verilerini alacak yeni fonksiyon
+    @RequiresApi(Build.VERSION_CODES.O)
     fun getEarthquakesFromAfad(): Flow<List<EarthquakeResponse>> = flow {
-        try {
-            Log.d(TAG, "AFAD API'sinden veri alma işlemi başlatılıyor...")
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+        val end = LocalDateTime.now()
+        val start = end.minusDays(7)
 
-            // AFAD API'sinden deprem verilerini al
-            // Türkiye'yi kapsayan koordinatlar
-            val earthquakes = earthquakeApiService.getEarthquakesFromAfad(
-                minLat = 35.0,
-                maxLat = 43.0,
-                minLon = 25.0,
-                maxLon = 45.0,
-                orderBy = "magnitude"
-            )
-
-            Log.d(TAG, "AFAD API'sinden veri başarıyla alındı, deprem sayısı: ${earthquakes.size}")
-            if (earthquakes.isNotEmpty()) {
-                Log.d(TAG, "İlk deprem: ${earthquakes.first().location}, ${earthquakes.first().magnitude}")
-            }
-
-            emit(earthquakes)
-        } catch (e: Exception) {
-            Log.e(TAG, "AFAD API'sinden deprem verileri alınırken hata oluştu: ${e.message}")
-            Log.e(TAG, "Hata detayı:", e)
-            emit(emptyList())
-        }
+        val earthquakes = earthquakeApiService.getEarthquakesFromAfad(
+            start = start.format(formatter),
+            end = end.format(formatter),
+            orderBy = "timedesc",
+            limit = 2000
+        )
+        emit(earthquakes)
     }
 
     // Eski Kandilli Rasathanesi veri alma fonksiyonu (yedek olarak tutulabilir)
@@ -100,7 +92,7 @@ class EarthquakeRepository @Inject constructor(
             }
 
             // Büyüklüğe göre sırala (azalan)
-            return earthquakes.sortedByDescending { it.magnitude }
+            return earthquakes.sortedByDescending { it.date }
         } catch (e: Exception) {
             Log.e(TAG, "HTML parsing hatası: ${e.message}")
             e.printStackTrace()

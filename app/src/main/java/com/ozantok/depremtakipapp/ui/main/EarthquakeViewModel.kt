@@ -55,7 +55,7 @@ class EarthquakeViewModel @Inject constructor(
                 }
                 .collectLatest { earthquakeList ->
                     Log.d(TAG, "AFAD deprem listesi alındı, boyut: ${earthquakeList.size}")
-                    _earthquakes.value = earthquakeList.sortedByDescending { it.magnitude }
+                    _earthquakes.value = earthquakeList.sortedByDescending { it.date }
                     _isLoading.value = false
                 }
         }
@@ -74,7 +74,7 @@ class EarthquakeViewModel @Inject constructor(
                 .collectLatest { earthquakeList ->
                     if (earthquakeList.isNotEmpty()) {
                         Log.d(TAG, "Kandilli yedek deprem listesi alındı, boyut: ${earthquakeList.size}")
-                        _earthquakes.value = earthquakeList.sortedByDescending { it.magnitude }
+                        _earthquakes.value = earthquakeList.sortedByDescending { it.date }
                         _error.value = null // Yedek başarılı oldu, hatayı temizle
                     } else {
                         _error.value = "Her iki veri kaynağından da deprem verileri alınamadı"

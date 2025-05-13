@@ -14,10 +14,9 @@ interface EarthquakeApiService {
     // AFAD API entegrasyonu
     @GET("apiv2/event/filter")
     suspend fun getEarthquakesFromAfad(
-        @Query("minlat") minLat: Double = 35.0,
-        @Query("maxlat") maxLat: Double = 43.0,
-        @Query("minlon") minLon: Double = 25.0,
-        @Query("maxlon") maxLon: Double = 45.0,
-        @Query("orderby") orderBy: String = "magnitude"
+        @Query("start") start: String,
+        @Query("end") end: String,
+        @Query("orderby") orderBy: String = "timedesc",
+        @Query("limit") limit: Int = 2000
     ): List<EarthquakeResponse>
 }
