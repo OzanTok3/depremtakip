@@ -18,6 +18,35 @@ class EarthquakeRepository @Inject constructor(
 ) {
     private val TAG = "EarthquakeRepository"
 
+    // AFAD API'sinden deprem verilerini alacak yeni fonksiyon
+    fun getEarthquakesFromAfad(): Flow<List<EarthquakeResponse>> = flow {
+        try {
+            Log.d(TAG, "AFAD API'sinden veri alma işlemi başlatılıyor...")
+
+            // AFAD API'sinden deprem verilerini al
+            // Türkiye'yi kapsayan koordinatlar
+            val earthquakes = earthquakeApiService.getEarthquakesFromAfad(
+                minLat = 35.0,
+                maxLat = 43.0,
+                minLon = 25.0,
+                maxLon = 45.0,
+                orderBy = "magnitude"
+            )
+
+            Log.d(TAG, "AFAD API'sinden veri başarıyla alındı, deprem sayısı: ${earthquakes.size}")
+            if (earthquakes.isNotEmpty()) {
+                Log.d(TAG, "İlk deprem: ${earthquakes.first().location}, ${earthquakes.first().magnitude}")
+            }
+
+            emit(earthquakes)
+        } catch (e: Exception) {
+            Log.e(TAG, "AFAD API'sinden deprem verileri alınırken hata oluştu: ${e.message}")
+            Log.e(TAG, "Hata detayı:", e)
+            emit(emptyList())
+        }
+    }
+
+    // Eski Kandilli Rasathanesi veri alma fonksiyonu (yedek olarak tutulabilir)
     fun getLastEarthquakes(): Flow<List<EarthquakeResponse>> = flow {
         try {
             Log.d(TAG, "Kandilli Rasathanesi'nden veri alma işlemi başlatılıyor...")

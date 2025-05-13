@@ -39,18 +39,46 @@ class EarthquakeViewModel @Inject constructor(
             _isLoading.value = true
             _error.value = null
 
-            Log.d(TAG, "Deprem verileri yükleniyor...")
+            Log.d(TAG, "AFAD API'sinden deprem verileri yükleniyor...")
 
-            repository.getLastEarthquakes()
+            // AFAD API'sini kullanacak şekilde güncellendi
+            repository.getEarthquakesFromAfad()
                 .catch { exception ->
                     val errorMsg = exception.message ?: "Deprem verileri yüklenirken bir hata oluştu"
-                    Log.e(TAG, "Veri yüklemede hata: $errorMsg", exception)
+                    Log.e(TAG, "AFAD veri yüklemede hata: $errorMsg", exception)
+                    _error.value = errorMsg
+                    _isLoading.value = false
+
+                    // AFAD API'si başarısız olursa, yedek olarak Kandilli'yi dene
+                    Log.d(TAG, "AFAD API başarısız oldu, Kandilli yedek kaynağına geçiliyor...")
+                    tryKandilliBackup()
+                }
+                .collectLatest { earthquakeList ->
+                    Log.d(TAG, "AFAD deprem listesi alındı, boyut: ${earthquakeList.size}")
+                    _earthquakes.value = earthquakeList.sortedByDescending { it.magnitude }
+                    _isLoading.value = false
+                }
+        }
+    }
+
+    // AFAD API'si başarısız olursa Kandilli'den veri almayı deneyen yedek fonksiyon
+    private fun tryKandilliBackup() {
+        viewModelScope.launch {
+            repository.getLastEarthquakes()
+                .catch { exception ->
+                    val errorMsg = exception.message ?: "Yedek kaynak da başarısız oldu"
+                    Log.e(TAG, "Kandilli yedek verisi yüklemede hata: $errorMsg", exception)
                     _error.value = errorMsg
                     _isLoading.value = false
                 }
                 .collectLatest { earthquakeList ->
-                    Log.d(TAG, "Deprem listesi alındı, boyut: ${earthquakeList.size}")
-                    _earthquakes.value = earthquakeList.sortedByDescending { it.magnitude }
+                    if (earthquakeList.isNotEmpty()) {
+                        Log.d(TAG, "Kandilli yedek deprem listesi alındı, boyut: ${earthquakeList.size}")
+                        _earthquakes.value = earthquakeList.sortedByDescending { it.magnitude }
+                        _error.value = null // Yedek başarılı oldu, hatayı temizle
+                    } else {
+                        _error.value = "Her iki veri kaynağından da deprem verileri alınamadı"
+                    }
                     _isLoading.value = false
                 }
         }

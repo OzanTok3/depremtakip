@@ -45,9 +45,9 @@ object NetworkModule {
     @Provides
     @Singleton
     fun provideRetrofit(okHttpClient: OkHttpClient, gson: Gson): Retrofit {
-        // Kandilli Rasathanesi'nin web sitesi
+        // AFAD API'sinin base URL'si
         return Retrofit.Builder()
-            .baseUrl("https://www.koeri.boun.edu.tr/")
+            .baseUrl("https://deprem.afad.gov.tr/")
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
