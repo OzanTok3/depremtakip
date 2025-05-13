@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Deprem Takip</string>
+    <string name="map_view">Harita Görünümü</string>
+    <string name="list_view">Liste Görünümü</string>
+    <string name="last_earthquakes">Son Depremler</string>
+    <string name="magnitude">Büyüklük</string>
+    <string name="depth">Derinlik</string>
+    <string name="location">Konum</string>
+    <string name="date">Tarih</string>
+    <string name="no_earthquakes_found">Sonuç bulunamadı.</string>
+</resources>
