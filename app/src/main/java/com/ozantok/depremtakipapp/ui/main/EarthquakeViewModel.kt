@@ -8,6 +8,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -35,15 +36,15 @@ class EarthquakeViewModel @Inject constructor(
             _isLoading.value = true
             _error.value = null
 
-            try {
-                repository.getLastEarthquakes().collectLatest { earthquakeList ->
-                    _earthquakes.value = earthquakeList
+            repository.getLastEarthquakes()
+                .catch { exception ->
+                    _error.value = exception.message ?: "Deprem verileri yüklenirken bir hata oluştu"
+                    _isLoading.value = false
                 }
-            } catch (e: Exception) {
-                _error.value = e.message ?: "Deprem verileri yüklenirken bir hata oluştu"
-            } finally {
-                _isLoading.value = false
-            }
+                .collectLatest { earthquakeList ->
+                    _earthquakes.value = earthquakeList.sortedByDescending { it.magnitude }
+                    _isLoading.value = false
+                }
         }
     }
 }

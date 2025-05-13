@@ -1,5 +1,7 @@
 package com.ozantok.depremtakipapp.data.repository
 
+
+
 import com.ozantok.depremtakipapp.data.model.EarthquakeResponse
 import com.ozantok.depremtakipapp.data.remote.EarthquakeApiService
 import kotlinx.coroutines.flow.Flow
@@ -16,7 +18,9 @@ class EarthquakeRepository @Inject constructor(
             val earthquakes = earthquakeApiService.getLastEarthquakes()
             emit(earthquakes)
         } catch (e: Exception) {
-            // Hata durumunu yönet
+            // Hatayı loglayalım
+            e.printStackTrace()
+            // Boş liste döndürelim
             emit(emptyList())
         }
     }
