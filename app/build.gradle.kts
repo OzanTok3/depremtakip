@@ -111,4 +111,5 @@ dependencies {
 
     implementation("androidx.compose.material3:material3:1.1.2")
     implementation("com.google.android.material:material:1.10.0")
+    implementation ("org.jsoup:jsoup:1.15.3")
 }

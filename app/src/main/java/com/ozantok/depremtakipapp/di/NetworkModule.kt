@@ -1,4 +1,5 @@
 package com.ozantok.depremtakipapp.di
+
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.ozantok.depremtakipapp.data.model.EarthquakeResponse
@@ -44,10 +45,9 @@ object NetworkModule {
     @Provides
     @Singleton
     fun provideRetrofit(okHttpClient: OkHttpClient, gson: Gson): Retrofit {
-        // Türkiye deprem verisi API'leri
+        // Kandilli Rasathanesi'nin web sitesi
         return Retrofit.Builder()
-            // Alternatif deprem API'si - GitHub üzerinde açık kaynaklı bir proje
-            .baseUrl("https://api.orhanaydogdu.com.tr/deprem/")
+            .baseUrl("https://www.koeri.boun.edu.tr/")
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()

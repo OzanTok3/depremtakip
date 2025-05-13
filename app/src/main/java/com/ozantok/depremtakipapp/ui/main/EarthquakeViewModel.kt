@@ -1,5 +1,7 @@
 package com.ozantok.depremtakipapp.ui.main
 
+
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ozantok.depremtakipapp.data.model.EarthquakeResponse
@@ -17,6 +19,7 @@ import javax.inject.Inject
 class EarthquakeViewModel @Inject constructor(
     private val repository: EarthquakeRepository
 ) : ViewModel() {
+    private val TAG = "EarthquakeViewModel"
 
     private val _earthquakes = MutableStateFlow<List<EarthquakeResponse>>(emptyList())
     val earthquakes: StateFlow<List<EarthquakeResponse>> = _earthquakes.asStateFlow()
@@ -36,12 +39,17 @@ class EarthquakeViewModel @Inject constructor(
             _isLoading.value = true
             _error.value = null
 
+            Log.d(TAG, "Deprem verileri yükleniyor...")
+
             repository.getLastEarthquakes()
                 .catch { exception ->
-                    _error.value = exception.message ?: "Deprem verileri yüklenirken bir hata oluştu"
+                    val errorMsg = exception.message ?: "Deprem verileri yüklenirken bir hata oluştu"
+                    Log.e(TAG, "Veri yüklemede hata: $errorMsg", exception)
+                    _error.value = errorMsg
                     _isLoading.value = false
                 }
                 .collectLatest { earthquakeList ->
+                    Log.d(TAG, "Deprem listesi alındı, boyut: ${earthquakeList.size}")
                     _earthquakes.value = earthquakeList.sortedByDescending { it.magnitude }
                     _isLoading.value = false
                 }
