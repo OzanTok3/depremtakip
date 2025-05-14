@@ -1,8 +1,12 @@
 package com.ozantok.depremtakipapp.data.model
 
+
 import com.google.gson.annotations.SerializedName
 import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Date
 import java.util.Locale
+import java.util.TimeZone
 
 data class EarthquakeResponse(
     @SerializedName("eventID")
@@ -22,6 +26,47 @@ data class EarthquakeResponse(
     @SerializedName("time")
     val time: String
 ) {
+    // Formatlanmış tarih ve saat döndüren fonksiyon
+    fun getFormattedDateTime(): String {
+        try {
+            var dateStr = date
+            var timeStr = time
+
+            // ISO formatı kontrolü (2025-05-14T07:07:39)
+            if (dateStr.contains("T")) {
+                val parts = dateStr.split("T")
+                if (parts.size == 2) {
+                    dateStr = parts[0]
+                    timeStr = parts[1]
+                }
+            }
+
+            // Tarih bileşenlerini ayır
+            val dateComponents = dateStr.replace(".", "-").split("-")
+            if (dateComponents.size != 3) return "$date $time"
+
+            val year = dateComponents[0]
+            val month = dateComponents[1]
+            val day = dateComponents[2]
+
+            // Saat bileşenlerini ayır
+            val timeComponents = timeStr.split(":")
+            if (timeComponents.isEmpty()) return "$date $time"
+
+            var hour = timeComponents[0].toIntOrNull() ?: 0
+            val minute = if (timeComponents.size > 1) timeComponents[1] else "00"
+
+            // Saate 3 saat ekle
+            hour = (hour + 3) % 24
+
+            // Formatlanmış tarih ve saati döndür
+            return "$day/$month/$year $hour:$minute"
+        } catch (e: Exception) {
+            // Hata durumunda orijinal tarih ve saati döndür
+            return "$date $time"
+        }
+    }
+
     companion object {
         // HTML tablosundan deprem verisi oluşturmak için yardımcı fonksiyon
         fun fromHtmlRow(row: String): EarthquakeResponse? {
