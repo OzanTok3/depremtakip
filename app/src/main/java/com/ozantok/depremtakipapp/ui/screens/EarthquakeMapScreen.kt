@@ -1,4 +1,6 @@
 package com.ozantok.depremtakipapp.ui.screens
+
+
 import android.Manifest
 import android.content.pm.PackageManager
 import androidx.compose.foundation.layout.*
@@ -28,7 +30,8 @@ import kotlinx.coroutines.tasks.await
 fun EarthquakeMapScreen(
     earthquakes: List<EarthquakeResponse>,
     isLoading: Boolean,
-    error: String?
+    error: String?,
+    showBanner: Boolean = true
 ) {
     val context = LocalContext.current
     val cameraPositionState = rememberCameraPositionState()
@@ -64,12 +67,14 @@ fun EarthquakeMapScreen(
     }
 
     Column(modifier = Modifier.fillMaxSize()) {
-        // Banner Reklam (Üstte)
-        BannerAdView(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(50.dp)
-        )
+        // Banner Reklam (Üstte) - eğer showBanner true ise göster
+        if (showBanner) {
+            BannerAdView(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp)
+            )
+        }
 
         // Harita
         Box(modifier = Modifier.weight(1f)) {
