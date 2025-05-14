@@ -114,5 +114,5 @@ dependencies {
     implementation ("org.jsoup:jsoup:1.15.3")
 
     implementation("com.google.android.gms:play-services-location:21.0.1")
-
+    implementation("com.google.android.gms:play-services-ads:22.2.0")
 }
