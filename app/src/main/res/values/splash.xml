@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Splash ekranı için tema -->
+    <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">@drawable/splash_background</item>
+        <item name="android:statusBarColor">@color/splash_bg_color</item>
+    </style>
+
+    <!-- Splash ekranı için renk -->
+    <color name="splash_bg_color">#1E40AF</color>
+</resources>

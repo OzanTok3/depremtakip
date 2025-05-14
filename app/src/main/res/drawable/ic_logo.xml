@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- Arka plan daire -->
+    <path
+        android:fillColor="#3B82F6"
+        android:pathData="M54,54m-48,0a48,48 0,1 1,96 0a48,48 0,1 1,-96 0"/>
+
+    <!-- İç daire - hafif gölgeli mavi -->
+    <path
+        android:fillColor="#2563EB"
+        android:pathData="M54,54m-40,0a40,40 0,1 1,80 0a40,40 0,1 1,-80 0"/>
+
+    <!-- Sismik dalgalar -->
+    <path
+        android:pathData="M14,54 Q26,30 38,54 Q48,72 54,54 Q60,36 70,54 Q80,72 94,54"
+        android:strokeWidth="4"
+        android:strokeColor="#FFFFFF"
+        android:strokeLineCap="round"
+        android:fillColor="#00000000"/>
+
+    <!-- Deprem odak noktası/epicenter -->
+    <path
+        android:fillColor="#FEF3C7"
+        android:pathData="M54,54m-8,0a8,8 0,1 1,16 0a8,8 0,1 1,-16 0"/>
+    <path
+        android:fillColor="#F59E0B"
+        android:pathData="M54,54m-5,0a5,5 0,1 1,10 0a5,5 0,1 1,-10 0"/>
+
+    <!-- Yerkabuğu çatlakları/hatlar -->
+    <path
+        android:pathData="M42,38L66,70"
+        android:strokeWidth="3"
+        android:strokeColor="#EF4444"
+        android:strokeLineCap="round"/>
+    <path
+        android:pathData="M66,38L42,70"
+        android:strokeWidth="3"
+        android:strokeColor="#EF4444"
+        android:strokeLineCap="round"/>
+
+    <!-- GPS hedef işareti -->
+    <path
+        android:pathData="M54,54m-20,0a20,20 0,1 1,40 0a20,20 0,1 1,-40 0"
+        android:strokeWidth="2"
+        android:strokeColor="#FFFFFF"
+
+        android:fillColor="#00000000"/>
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M54,54m-2,0a2,2 0,1 1,4 0a2,2 0,1 1,-4 0"/>
+
+    <!-- Pusula yönleri (N, E, S, W) - Text'ler vektör olarak değiştirildi -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M53.44,30L54.97,30L55.86,26.52L56.72,30L58.25,30L58.25,24.5L56.97,24.5L56.97,27.45L56.31,24.5L55.36,24.5L54.69,27.45L54.69,24.5L53.44,24.5L53.44,30Z"/>
+
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M79.94,56L79.94,54.75L76.44,54.75L76.44,56L77.8,56L75.86,58.72L76.83,59.5L78.75,56.75L78.75,58.5L79.94,58.5L79.94,56Z"/>
+
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M52.56,82L52.56,83.5L55.78,83.5Q55.33,83.95 54.95,84.33Q54.58,84.7 54.3,85L55.69,85Q56.03,84.56 56.39,84.15Q56.77,83.73 57.19,83.5L57.19,82L52.56,82Z"/>
+
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M33.11,54.75L28.11,54.75L28.11,56L29.95,56L27.95,58.72L28.92,59.5L30.95,56.72L33.11,59.5L34.14,58.72L31.97,56L33.11,56L33.11,54.75Z"/>
+</vector>
