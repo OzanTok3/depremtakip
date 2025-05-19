@@ -31,10 +31,17 @@ fun EarthquakeMapScreen(
     earthquakes: List<EarthquakeResponse>,
     isLoading: Boolean,
     error: String?,
-    showBanner: Boolean = true
+    showBanner: Boolean = true,
+    focusedLat: Double? = null,
+    focusedLon: Double? = null
 ) {
     val context = LocalContext.current
-    val cameraPositionState = rememberCameraPositionState()
+    val defaultLatLng = LatLng(39.9208, 32.8541) // Ankara
+    val cameraPositionState = rememberCameraPositionState {
+        position = CameraPositionState(
+            position = com.google.android.gms.maps.model.CameraPosition.fromLatLngZoom(defaultLatLng, 6f)
+        ).position
+    }
     var locationPermissionGranted by remember { mutableStateOf(false) }
     var locationZoomDone by remember { mutableStateOf(false) }
 
@@ -63,6 +70,13 @@ fun EarthquakeMapScreen(
             } catch (e: Exception) {
                 e.printStackTrace()
             }
+        }
+    }
+
+    LaunchedEffect(focusedLat, focusedLon) {
+        if (focusedLat != null && focusedLon != null) {
+            val target = LatLng(focusedLat, focusedLon)
+            cameraPositionState.move(CameraUpdateFactory.newLatLngZoom(target, 10f))
         }
     }
 
@@ -106,6 +120,16 @@ fun EarthquakeMapScreen(
                             }
                         )
                     )
+
+                    if (focusedLat != null && focusedLon != null) {
+                        val focusedPosition = LatLng(focusedLat, focusedLon)
+                        Marker(
+                            state = MarkerState(position = focusedPosition),
+                            title = "Deprem Noktası",
+                            snippet = "Bildirime neden olan deprem burada meydana geldi.",
+                            icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)
+                        )
+                    }
                 }
             }
 

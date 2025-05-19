@@ -30,13 +30,18 @@ import com.ozantok.depremtakipapp.ui.screens.EarthquakeMapScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(viewModel: EarthquakeViewModel = hiltViewModel()) {
+fun MainScreen(
+    openMap: Boolean,
+    quakeLat: Double,
+    quakeLon: Double,
+    viewModel: EarthquakeViewModel = hiltViewModel()
+) {
     val navController = rememberNavController()
     val earthquakes by viewModel.earthquakes.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
     val error by viewModel.error.collectAsState()
 
-    var selectedTab by remember { mutableStateOf(0) }
+    var selectedTab by remember { mutableStateOf(if (openMap) 0 else 1) }
     val tabs = listOf(
         TabItem(
             title = stringResource(R.string.map_view),
@@ -102,7 +107,9 @@ fun MainScreen(viewModel: EarthquakeViewModel = hiltViewModel()) {
                         isLoading = isLoading,
                         error = error,
                         // Banner'ı mainScreen'e taşıdığımız için showBanner = false gönderiyoruz
-                        showBanner = false
+                        showBanner = false,
+                        focusedLat = if (quakeLat != -1.0) quakeLat else null,
+                        focusedLon = if (quakeLon != -1.0) quakeLon else null
                     )
                 }
                 composable("list") {
