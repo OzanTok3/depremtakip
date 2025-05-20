@@ -5,9 +5,11 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat
 import com.ozantok.depremtakipapp.MainActivity
 import com.ozantok.depremtakipapp.R
 import com.ozantok.depremtakipapp.data.model.EarthquakeResponse
@@ -59,6 +61,25 @@ object NotificationUtil {
             .setAutoCancel(true)
 
         if (NotificationManagerCompat.from(context).areNotificationsEnabled()) {
+            NotificationManagerCompat.from(context).notify(
+                System.currentTimeMillis().toInt(),
+                builder.build()
+            )
+        }
+    }
+
+    fun showBasicNotification(context: Context, title: String, message: String) {
+        val builder = NotificationCompat.Builder(context, "earthquake_channel_id")
+            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setContentTitle(title)
+            .setContentText(message)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setAutoCancel(true)
+
+        if (
+            NotificationManagerCompat.from(context).areNotificationsEnabled() &&
+            ContextCompat.checkSelfPermission(context, android.Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED
+        ) {
             NotificationManagerCompat.from(context).notify(
                 System.currentTimeMillis().toInt(),
                 builder.build()
